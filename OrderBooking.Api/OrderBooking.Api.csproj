@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <InvariantGlobalization>true</InvariantGlobalization>
+    <UserSecretsId>17329092-6b82-4ee2-b62f-255939833356</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,10 +12,15 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!-- <ItemGroup>
     <Reference Include="AsyncHandler.EventSourcing">
       <HintPath>..\..\..\AsyncHandler\AsyncHandler.EventSourcing\src\AsyncHandler.EventSourcing\bin\Debug\net8.0\AsyncHandler.EventSourcing.dll</HintPath>
     </Reference>
+  </ItemGroup> -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\OrderBooking\OrderBooking.csproj" />
+    <ProjectReference Include="..\..\..\AsyncHandler\AsyncHandler.EventSourcing\src\AsyncHandler.EventSourcing\AsyncHandler.EventSourcing.csproj" />
   </ItemGroup>
 
 </Project>

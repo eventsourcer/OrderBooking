@@ -1,5 +1,5 @@
 using AsyncHandler.EventSourcing.Events;
 
-namespace OrderBookingr.Events;
+namespace OrderBooking.Events;
 
 public record OrderConfirmed() : SourceEvent;
