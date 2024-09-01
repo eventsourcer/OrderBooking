@@ -1,38 +1,36 @@
-﻿using System.Reflection;
-using AsyncHandler.EventSourcing.AggregateRoot;
+﻿using AsyncHandler.EventSourcing;
 using AsyncHandler.EventSourcing.Events;
 using AsyncHandler.EventSourcing.Extensions;
 using OrderBooking.Commands;
-using OrderBookingr.Events;
+using OrderBooking.Events;
 
 namespace OrderBooking;
 
-public class OrderBookingAggregate(int orderId) : AggregateRoot(orderId)
+public class OrderBookingAggregate(long orderId) : AggregateRoot(orderId)
 {
-    public OrderStatus Status { get; private set; }
+    public OrderStatus OrderStatus { get; private set; }
     protected override void Apply(SourceEvent e)
     {
-        var apply = GetType().GetApply(e);
-        try
-        {
-            apply.Invoke(this, [e]);
-        }
-        catch(TargetInvocationException)
-        {
-            throw;
-        }
-        base.Apply(e);
+        this.InvokeApply(e);
     }
-    private void Apply(OrderPlaced e)
+    public void Apply(OrderPlaced e)
     {
-        Status = OrderStatus.Placed;
+        OrderStatus = OrderStatus.Placed;
     }
-    private void Apply(OrderConfirmed e)
+    public void Apply(OrderConfirmed e)
     {
-        Status = OrderStatus.Confirmed;
+        OrderStatus = OrderStatus.Confirmed;
     }
-    public void PlaceOrder(PlaceOrder placeOrder)
+    public void PlaceOrder(PlaceOrder command)
     {
-        RaiseEvent(new OrderPlaced());
+        if(OrderStatus == OrderStatus.Placed)
+            return;
+        RaiseEvent(new OrderPlaced(command));
+    }
+    public void ConfirmOrder(ConfirmOrder command)
+    {
+        if( OrderStatus == OrderStatus.Confirmed)
+            return;
+        RaiseEvent(new OrderConfirmed());
     }
 }
