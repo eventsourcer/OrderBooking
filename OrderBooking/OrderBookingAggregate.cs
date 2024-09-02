@@ -27,10 +27,15 @@ public class OrderBookingAggregate(long orderId) : AggregateRoot(orderId)
             return;
         RaiseEvent(new OrderPlaced(command));
     }
+    public void Apply(OrderRedied e)
+    {
+        
+    }
     public void ConfirmOrder(ConfirmOrder command)
     {
         if( OrderStatus == OrderStatus.Confirmed)
             return;
         RaiseEvent(new OrderConfirmed());
+        RaiseEvent(new OrderRedied());
     }
 }
