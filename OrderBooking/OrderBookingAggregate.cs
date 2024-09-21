@@ -5,11 +5,10 @@ using OrderBooking.Commands;
 using OrderBooking.Events;
 
 namespace OrderBooking;
-
-public class OrderBookingAggregate(long orderId) : AggregateRoot(orderId)
+public class OrderBookingAggregate : AggregateRoot<long>
 {
     public OrderStatus OrderStatus { get; private set; }
-    protected override void Apply(SourceEvent e)
+    protected override void Apply(SourcedEvent e)
     {
         this.InvokeApply(e);
     }

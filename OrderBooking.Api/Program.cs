@@ -1,6 +1,7 @@
 using AsyncHandler.EventSourcing;
 using AsyncHandler.EventSourcing.Configuration;
 using AsyncHandler.EventSourcing.Projections;
+using AsyncHandler.EventSourcing.Repositories;
 using OrderBooking;
 using OrderBooking.Commands;
 
@@ -11,13 +12,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration["AzureSqlDatabase"] ?? throw new Exception("No connection defined");
+var connectionString = builder.Configuration["mssqlsecret"] ?? throw new Exception("No connection defined");
 
 builder.Services.AddAsyncHandler(asynchandler =>
 {
     asynchandler.AddEventSourcing(source =>
     {
-        source.SelectEventSource(EventSources.AzureSql, connectionString)
+        source.SelectEventSource(EventSources.SqlServer, connectionString)
         .AddProjection<Projection>(ProjectionMode.Async);
     })
     .EnableTransactionalOutbox(MessageBus.Kafka, "");
@@ -41,9 +42,11 @@ async(IEventSource<OrderBookingAggregate> eventSource, PlaceOrder command) =>
     aggregate.PlaceOrder(command);
 
     await eventSource.Commit(aggregate);
+
+    return Results.Ok(aggregate.SourceId);
 });
 app.MapPost("api/confirmorder/{orderId}", 
-async(IEventSource<OrderBookingAggregate> eventSource, long orderId, ConfirmOrder command) =>
+async(IEventSource<OrderBookingAggregate> eventSource, string orderId, ConfirmOrder command) =>
 {
     var aggregate = await eventSource.CreateOrRestore(orderId);
     aggregate.ConfirmOrder(command);

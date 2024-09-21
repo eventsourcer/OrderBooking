@@ -6,14 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <!-- <ItemGroup>
-    <Reference Include="AsyncHandler.EventSourcing">
-      <HintPath>..\..\..\AsyncHandler\AsyncHandler.EventSourcing\src\AsyncHandler.EventSourcing\bin\Debug\net8.0\AsyncHandler.EventSourcing.dll</HintPath>
-    </Reference>
-  </ItemGroup> -->
-
   <ItemGroup>
     <ProjectReference Include="..\..\..\AsyncHandler\AsyncHandler.EventSourcing\src\AsyncHandler.EventSourcing\AsyncHandler.EventSourcing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- <PackageReference Include="AsyncHandler.EventSourcing" Version="1.0.3" /> -->
   </ItemGroup>
 
 </Project>
