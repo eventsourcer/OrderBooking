@@ -1,11 +1,11 @@
-﻿using AsyncHandler.EventSourcing;
-using AsyncHandler.EventSourcing.Events;
-using AsyncHandler.EventSourcing.Extensions;
+﻿using EventStorage.AggregateRoot;
+using EventStorage.Events;
+using EventStorage.Extensions;
 using OrderBooking.Commands;
 using OrderBooking.Events;
 
 namespace OrderBooking;
-public class OrderBookingAggregate : AggregateRoot<long>
+public class OrderBookingAggregate : EventSource<long>
 {
     public OrderStatus OrderStatus { get; private set; }
     protected override void Apply(SourcedEvent e)

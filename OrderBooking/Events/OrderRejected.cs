@@ -3,4 +3,4 @@ using OrderBooking.Commands;
 
 namespace OrderBooking.Events;
 
-public record OrderPlaced(PlaceOrder Command) : SourcedEvent;
+public record OrderRejected(PlaceOrder Command) : SourcedEvent;
