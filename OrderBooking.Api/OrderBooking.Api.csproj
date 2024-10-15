@@ -8,14 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- <PackageReference Include="AsyncHandler.EventSourcing" Version="1.0.3" /> -->
+    <!-- <PackageReference Include="EventStorage" Version="0.0.0-alpha.5" /> -->
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OrderBooking\OrderBooking.csproj" />
-    <ProjectReference Include="..\..\..\AsyncHandler\AsyncHandler.EventSourcing\src\AsyncHandler.EventSourcing\AsyncHandler.EventSourcing.csproj" />
+    <ProjectReference Include="..\..\..\AsyncHandler\eventstorage\src\EventStorage.csproj" />
   </ItemGroup>
 
 </Project>

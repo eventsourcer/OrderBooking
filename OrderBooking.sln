@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderBooking.Api", "OrderBo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderBooking", "OrderBooking\OrderBooking.csproj", "{19BC1D5D-DEFF-4BB7-AF4A-FE73151F62B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncHandler.EventSourcing", "..\..\AsyncHandler\AsyncHandler.EventSourcing\src\AsyncHandler.EventSourcing\AsyncHandler.EventSourcing.csproj", "{6440131E-C996-401F-8551-E3468D84A8C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventStorage", "..\..\AsyncHandler\EventStorage\src\EventStorage.csproj", "{6440131E-C996-401F-8551-E3468D84A8C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

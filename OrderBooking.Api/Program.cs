@@ -1,9 +1,10 @@
-using AsyncHandler.EventSourcing;
-using AsyncHandler.EventSourcing.Configuration;
-using AsyncHandler.EventSourcing.Projections;
-using AsyncHandler.EventSourcing.Repositories;
+using EventStorage;
+using EventStorage.Configurations;
+using EventStorage.Projections;
+using EventStorage.Repositories;
 using OrderBooking;
 using OrderBooking.Commands;
+using OrderBooking.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,16 +13,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration["mssqlsecret"] ?? throw new Exception("No connection defined");
+var connectionString = builder.Configuration["postgresqlsecret"]??
+    throw new Exception("No connection defined");
 
-builder.Services.AddAsyncHandler(asynchandler =>
+builder.Services.AddEventStorage(eventstorage =>
 {
-    asynchandler.AddEventSourcing(source =>
+    eventstorage.Schema = "es";
+    
+    eventstorage.AddEventSource(eventsource =>
     {
-        source.SelectEventSource(EventSources.SqlServer, connectionString)
-        .AddProjection<Projection>(ProjectionMode.Async);
-    })
-    .EnableTransactionalOutbox(MessageBus.Kafka, "");
+        eventsource.SelectEventStorage(EventStore.PostgresSql, connectionString)
+        .Project<OrderProjection>(ProjectionMode.Runtime);
+    });
 });
 
 var app = builder.Build();
@@ -36,7 +39,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapPost("api/placeorder", 
-async(IEventSource<OrderBookingAggregate> eventSource, PlaceOrder command) =>
+async(IEventStorage<OrderBookingAggregate> eventSource, PlaceOrder command) =>
 {
     var aggregate = await eventSource.CreateOrRestore();
     aggregate.PlaceOrder(command);
@@ -46,12 +49,25 @@ async(IEventSource<OrderBookingAggregate> eventSource, PlaceOrder command) =>
     return Results.Ok(aggregate.SourceId);
 });
 app.MapPost("api/confirmorder/{orderId}", 
-async(IEventSource<OrderBookingAggregate> eventSource, string orderId, ConfirmOrder command) =>
+async(IEventStorage<OrderBookingAggregate> eventSource, string orderId, ConfirmOrder command) =>
 {
     var aggregate = await eventSource.CreateOrRestore(orderId);
     aggregate.ConfirmOrder(command);
 
     await eventSource.Commit(aggregate);
+});
+
+app.MapGet("api/getorder/{orderId}",
+async(IEventStorage<OrderBookingAggregate> eventStorage, string orderId) =>
+{
+    var order = await eventStorage.Project<OrderProjection>(orderId);
+    return Results.Ok(order);
+});
+app.MapGet("api/getorder/{orderId}",
+async(IEventStorage<OrderBookingAggregate> eventStorage, string orderId) =>
+{
+    var order = await eventStorage.Project<Order>(orderId);
+    return Results.Ok(order);
 });
 
 app.Run();
